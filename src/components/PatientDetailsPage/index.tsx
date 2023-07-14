@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
+import { EntryDetail } from "./EntryDetails";
 
 import { Patient } from "../../types";
 
@@ -86,23 +87,7 @@ export const PatientDetailsPage = () : JSX.Element => {
 
             <div>ssn: {patient.ssn}</div>
             <div>occupation: {patient.occupation}</div>
-            <h3>entries</h3>
-            {/* {patient.entries.map((entry: { id: React.Key | null | undefined; diagnosisCodes: any[]; }) => {
-                return (
-                    <div key={entry.id}>
-                        <EntryDetails entry={entry} />
-                        <ul>
-                            {entry.diagnosisCodes?.map(code => {
-
-                                const diagnosis = diagnosis.find((d: { code: any; }) => d.code === code);
-                                return (
-                                    <li key={code}>{code} {diagnosis?.name}</li>
-                                );
-                            })}
-                        </ul>
-                    </div>
-                );
-            })} */}
+            <EntryDetail entries={patient.entries} />
         </div>
     );
 }
