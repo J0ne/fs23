@@ -42,7 +42,6 @@ import { apiBaseUrl } from "../../constants";
         return { patient, error, loading };
     };
 
-
 export const PatientDetailsPage = () : JSX.Element => {
     const { id } = useParams<{ id: string }>();
     const { patient, error, loading } = usePatient(id);
