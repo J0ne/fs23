@@ -45,7 +45,7 @@ export const HospitalHealthcare: React.FC<{ entry: HospitalEntry }> = ({ entry }
                     );
                 })}
             </ul>
-            <p>Discharged: {entry.discharge.date} {entry.discharge.criteria}</p>
+            <p>Discharged: {entry?.discharge?.date} {entry?.discharge?.criteria}</p>
             <p>Diagnose by: {entry.specialist}</p>
         </div>
     );

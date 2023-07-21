@@ -86,7 +86,7 @@ export const PatientDetailsPage = () : JSX.Element => {
 
             <div>ssn: {patient.ssn}</div>
             <div>occupation: {patient.occupation}</div>
-            <EntryDetail entries={patient.entries} />
+            <EntryDetail id={patient.id} />
         </div>
     );
 }
