@@ -1,38 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Diagnosis, OccupationalHealthcareEntry } from '../../types';
-import { getDiagnosesByIds } from '../../services/diagnoses';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 
+interface Props {
+    entry: OccupationalHealthcareEntry
+    diagnoses: Diagnosis[] | undefined
+}
 
-export const OccupationalHealthCheck: React.FC<{ entry: OccupationalHealthcareEntry }> = ({ entry }) => {
-    // const [{ diagnoses }, dispatch] = useStateValue();
-    const [diagnosis, setDiagnosis] = useState<Diagnosis[]>();
-    const [error, setError] = useState<string | undefined>(undefined);
-    const [loading, setLoading] = useState<boolean>(true);
+export const OccupationalHealthCheck = ({ entry, diagnoses }: Props) :JSX.Element => {
 
     useEffect(() => {
-        const fetchDiagnosis = async () => {
-            try {
-                const codes = entry?.diagnosisCodes;
-                const diagnosis = await getDiagnosesByIds(codes as string[]);
-                console.log('Just got diagnosis', diagnosis)
-                if(diagnosis.length > 0) {
-                    setDiagnosis(diagnosis);
-                }
-            } catch (e) {
-                console.error(e);
-                if(e instanceof Error) {
-                    setError(e.message);
-                } else {
-                    setError("Unknown error");
-                }
+        setDiagnosis(diagnoses);
+        setLoading(false);
+    }, [diagnoses]);
 
-            } finally {
-                setLoading(false);
-            }
-        };
-        void fetchDiagnosis();
-    }, [entry]);
+    const [diagnosis, setDiagnosis] = useState<Diagnosis[]>();
+    const [, setLoading] = useState<boolean>(true);
 
     return (
         <div  className={"health-details"}>
@@ -49,7 +32,7 @@ export const OccupationalHealthCheck: React.FC<{ entry: OccupationalHealthcareEn
             </ul>
             <p>Employer: {entry.employerName}</p>
             <p>Sick leave: {entry.sickLeave?.startDate} - {entry.sickLeave?.endDate}</p>
-              <p>Diagnose by: {entry.specialist}</p>
+            <p>Diagnose by: {entry.specialist}</p>
         </div>
     );
 }

@@ -21,19 +21,39 @@ interface ValidationError {
 
 export const EntryDetail = (props: Props) : JSX.Element => {
 
-
-    // useDiagnosis hook
     const [diagnosis, setDiagnosis] = useState<Diagnosis[]>();
     const [error, setError] = useState<string | undefined>(undefined);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [, setLoading] = useState<boolean>(true);
     const [entries, updateEntries] = useState<EntryType[]>([]);
 
+
+     const fetchDiagnosis = async () => {
+            try {
+                const codes =  entries.map(entry => entry.diagnosisCodes).filter( c=> c !== undefined).flat();
+                const uniqueCodes = [...new Set(codes)];
+                const diagnosis = await getDiagnosesByIds(uniqueCodes as string[]);
+
+                if(diagnosis.length > 0) {
+                    setDiagnosis(diagnosis);
+                }
+            } catch (e) {
+                console.error(e);
+                if(e instanceof Error) {
+                    setError(e.message);
+                } else {
+                    setError("Unknown error");
+                }
+
+            } finally {
+                setLoading(false);
+            }
+
+        };
 
     const fetchEntries = async () => {
                 try {
                     const patientData = await patientService.getPatientById(props.id);
                     const entries = patientData.entries;
-                    console.log('entries', entries);
                     updateEntries(entries);
                     setError('');
                 } catch (e) {
@@ -54,55 +74,26 @@ export const EntryDetail = (props: Props) : JSX.Element => {
     }, []);
 
 
-
-
     useEffect(() => {
-        if(diagnosis && diagnosis?.length > 0) {
-            return;
-        }
-        const fetchDiagnosis = async () => {
-            try {
-                const codes = entries.map(entry => entry?.diagnosisCodes).flat();
-                const diagnosis = await getDiagnosesByIds(codes as string[]);
-
-                if(diagnosis.length > 0) {
-
-                    setDiagnosis(diagnosis);
-                }
-            } catch (e) {
-                console.error(e);
-                if(e instanceof Error) {
-                    setError(e.message);
-                } else {
-                    setError("Unknown error");
-                }
-
-            } finally {
-                setLoading(false);
-            }
-        };
-        if(diagnosis === undefined) {
-            void fetchDiagnosis();
-        }
-
-    }, [diagnosis]);
+        void fetchDiagnosis();
+    }, [entries]);
 
 
     const entryType = (entry: EntryType) => {
         switch(entry.type) {
             case "HealthCheck":
-                return <HealthCheck entry={entry} />;
+                return <HealthCheck entry={entry}  diagnoses={diagnosis}/>;
             case "Hospital":
-                return <HospitalHealthcare entry={entry} />;
+                return <HospitalHealthcare entry={entry}  diagnoses={diagnosis}/>;
             case "OccupationalHealthcare":
-                return <OccupationalHealthCheck entry={entry} />;
+                return <OccupationalHealthCheck entry={entry}  diagnoses={diagnosis}/>;
             default:
                 return assertNever(entry);
         }
     };
 
     const addNewEntry = async (values: NewEntry) => {
-        console.log('add new entry', values);
+
         try {
             await patientService.addEntry(props.id, values);
             setError('');

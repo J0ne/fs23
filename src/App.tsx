@@ -32,7 +32,7 @@ const App = () => {
         const diagnosis = await axios.get<Diagnosis[]>(
           `${apiBaseUrl}/diagnoses`
         );
-        console.log(diagnosis.data);
+
       } catch (e) {
         console.error(e);
       }

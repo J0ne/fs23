@@ -1,41 +1,24 @@
 import { useEffect, useState } from "react";
 import HealthRatingBar from "../HealthRatingBar";
-import { getDiagnosesByIds } from "../../services/diagnoses";
 import { Diagnosis, HealthCheckEntry } from "../../types";
 // Icon imports material ui
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 
+interface Props {
+    entry: HealthCheckEntry
+    diagnoses: Diagnosis[] | undefined
+}
 
-export const HealthCheck: React.FC<{ entry: HealthCheckEntry }> = ({ entry }) => {
-    // const [{ diagnoses }, dispatch] = useStateValue();
+export const HealthCheck = ({ entry, diagnoses }: Props) :JSX.Element => {
+
     const [diagnosis, setDiagnosis] = useState<Diagnosis[]>();
-    const [ error, setError] = useState<string | undefined>(undefined);
-    const [ loading, setLoading] = useState<boolean>(true);
+    const [, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        error && console.error(error);
-        const fetchDiagnosis = async () => {
-            try {
-                const codes = entry?.diagnosisCodes;
-                const diagnosis = await getDiagnosesByIds(codes as string[]);
-                console.log('Just got diagnosis', diagnosis)
-                if(diagnosis.length > 0) {
-                    setDiagnosis(diagnosis);
-                }
-            } catch (e) {
-                console.error(e);
-                if(e instanceof Error) {
-                    setError(e.message);
-                } else {
-                    setError("Unknown error");
-                }
+        setDiagnosis(diagnoses);
+        setLoading(false);
+    }, [diagnoses]);
 
-            } finally {
-                setLoading(false);
-            }
-        };
-        void fetchDiagnosis();
-    }, [entry]);
 
     return (
         <div className={"health-details"}>
@@ -51,7 +34,8 @@ export const HealthCheck: React.FC<{ entry: HealthCheckEntry }> = ({ entry }) =>
                     );
                 })}
             </ul>
-            <p>Health Rating: <HealthRatingBar showText={false} rating={entry.healthCheckRating} /></p>
+            <p>Health Rating:</p>
+             <HealthRatingBar showText={false} rating={entry.healthCheckRating} />
             <p>Diagnose by: {entry.specialist}</p>
         </div>
     );
