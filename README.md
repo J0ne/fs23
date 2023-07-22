@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Patientor - frontend
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -40,3 +41,10 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 To learn React, check out the [React documentation](https://reactjs.org/).
 
 [React TypeScript cheetseat](https://react-typescript-cheatsheet.netlify.app/)
+=======
+# fs23
+
+Repository for submitting exercises of the course Fullstack Open 23
+
+### part9-typescript contains exercises 9.1 - 9.7
+>>>>>>> 9e329a4688524f69d116abf53fc24310e5694100
